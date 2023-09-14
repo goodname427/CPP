@@ -29,6 +29,17 @@ public:
 class edge
 {
 public:
+    static bool compare(const edge &e1, const edge &e2)
+    {
+        return e1.weight < e2.weight;
+    }
+
+    static bool compare(const edge *&e1, const edge *&e2)
+    {
+        return e1->weight < e2->weight;
+    }
+
+public:
     map_node *from;
     map_node *to;
     int weight;
@@ -48,6 +59,14 @@ public:
 
     graph() {}
 
+    ~graph()
+    {
+        for (auto e : edges)
+            delete e;
+        for (auto n : nodes)
+            delete n.second;
+    }
+
     void insert_edge(int i, int j, int weight)
     {
         edge *e = new edge(nodes[i], nodes[j], weight);
@@ -59,6 +78,19 @@ public:
     }
 
     vector<vector<int>> to_matrix()
+    {
+        return to_matrix(edges);
+    }
+
+    vector<vector<int>> to_matrix(unordered_set<edge *> edges)
+    {
+        vector<edge *> _edges;
+        for (auto e : edges)
+            _edges.push_back(e);
+        return to_matrix(_edges);
+    }
+    
+    vector<vector<int>> to_matrix(vector<edge *> edges)
     {
         unordered_map<int, map_node *>::iterator max_ele = max_element(nodes.begin(), nodes.end());
         int size = max_ele == nodes.end() ? 0 : max_ele->first + 1;
@@ -102,23 +134,29 @@ graph *randomly_map(int max_size, int max_value, bool is_disdirect_map = true)
 
 void print(const vector<vector<int>> &mat)
 {
+    string space_head = "  ";
+    string p = "%3d ";
+    string p2 = "%3s ";
     for (int i = 0; i < mat.size(); i++)
     {
         if (!i)
         {
-            cout << "   ";
+            printf(p2.c_str(), "");
             for (int j = 0; j < mat[i].size(); j++)
             {
-                cout << j << " ";
+                printf(p.c_str(), j);
             }
             cout << endl;
         }
         for (int j = 0; j < mat[i].size(); j++)
         {
             if (!j)
-                cout << i << "  ";
+                printf(p.c_str(), i);
 
-            cout << (mat[i][j] == EDGE_INF ? "_" : to_string(mat[i][j])) << " ";
+            if(mat[i][j] == EDGE_INF)
+                printf("  _ ");
+            else
+                printf(p.c_str(), mat[i][j]);
         }
         cout << endl;
     }

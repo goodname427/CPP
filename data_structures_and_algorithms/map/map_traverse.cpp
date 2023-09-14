@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include <stdio.h>
 #include "map.cpp"
 using namespace std;
 
@@ -98,4 +99,6 @@ int main()
     dfs_recur(g->nodes[0]);
     cout << "dfs:" << endl;
     dfs(g->nodes[0]);
+
+    delete g;
 }
