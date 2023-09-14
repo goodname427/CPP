@@ -1,0 +1,68 @@
+#include <iostream>
+#include <random>
+using namespace std;
+
+class Test
+{
+public:
+    static void TestIt(int (*Search)(string, string))
+    {
+        string s1, s2;
+        RandomString(s1, s2);
+        int count = 0, pos;
+        while (count < 1000 && Verify(s1, s2, pos, Search))
+        {
+            if (pos != -1)
+                count++;
+            RandomString(s1, s2);
+        }
+        if (count < 1000)
+            cout << "失败";
+        else
+            cout << "成功";
+    }
+
+private:
+    static int IndexOf(string main, string part)
+    {
+        for (int i = 0; i <= main.length() - part.length(); i++)
+        {
+            int j;
+            for (j = 0; j < part.length(); j++)
+            {
+                if (main[i + j] != part[j])
+                    break;
+            }
+            if (j == part.length())
+                return i;
+        }
+        return -1;
+    }
+    static bool Verify(string s1, string s2, int &pos, int (*Search)(string, string))
+    {
+        int r1 = IndexOf(s1, s2);
+        int r2 = Search(s1, s2);
+        if (r1 != -1)
+        {
+            cout << "First String:" << s1 << endl
+                 << "Second String:" << s2 << endl;
+            cout << "BF:" <<r1 << " Yours:" << r2 << endl
+                 << endl;
+        }
+        pos = r1;
+        return r1 == r2;
+    }
+
+    static void RandomString(string &s1, string &s2)
+    {
+        random_device rand;
+        int l1 = (rand() % 10) + 40, l2 = (rand() % 5) + 5;
+        s1 = s2 = "";
+        for (int i = 0; i < l1; i++)
+        {
+            s1 += (char)((rand() % 26) + 65);
+            if (i < l2)
+                s2 += (char)((rand() % 26) + 65);
+        }
+    }
+};

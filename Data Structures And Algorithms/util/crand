@@ -1,0 +1,28 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+bool __has_srand = false;
+
+//返回一个随机数
+int random()
+{
+    if (!__has_srand)
+    {
+        srand(time(0));
+        __has_srand = true;
+    }
+
+    return rand();
+}
+
+//返回[min,max)的一个随机数
+int random(int min, int max)
+{
+    return random() % (max - min) + min;
+}
+
+//返回从[0,max)的一个随机数
+int random(int max)
+{
+    return random(0, max);
+}

@@ -1,0 +1,78 @@
+#include <bits/stdc++.h>
+#include "crand"
+using namespace std;
+
+// 打印向量中的所有元素
+void print(vector<int> vec)
+{
+    for (auto ele : vec)
+        cout << ele << " ";
+    cout << endl;
+}
+// 获得一个随机组成的向量
+vector<int> randomly_vec(int max_size, int max_value)
+{
+    int size = random(1, max_size+1);
+    vector<int> vec(size);
+    for (int i = 0; i < size; i++)
+        vec[i] = random(max_value + 1);
+
+    return vec;
+}
+// 获得一个随即组成的唯一的向量
+vector<int> unique_vec(int max_size, int max_value)
+{
+    auto vec = randomly_vec(max_size, max_value);
+    vector<int> vecprint;
+    // 第一个元素不用比
+    vecprint.push_back(vec[0]);
+    for (int i = 1; i < vec.size(); i++)
+    {
+        bool tag = true;
+        for (int j = 0; j < vecprint.size(); j++)
+        {
+            if (vec[i] == vecprint[j])
+            {
+                tag = false;
+                break;
+            }
+        }
+        if (tag)
+            vecprint.push_back(vec[i]);
+    }
+
+    return vecprint;
+}
+// 获得一个随即组成的从小到大排序的向量
+vector<int> sorted_vec(int max_size, int max_value)
+{
+    auto vec = randomly_vec(max_size, max_value);
+    sort(vec.begin(), vec.end());
+    return vec;
+}
+// 判断两个向量中的元素是否均相等
+bool equal(vector<int> vec1, vector<int> vec2, bool ignore_order = true)
+{
+    if (vec1.size() != vec2.size())
+        return false;
+    if (ignore_order)
+    {
+        sort(vec1.begin(), vec1.end());
+        sort(vec2.begin(), vec2.end());
+    }
+
+    for (int i = 0; i < vec1.size(); i++)
+    {
+        if (vec1[i] != vec2[i])
+            return false;
+    }
+    return true;
+}
+//判断一个向量是否单调递增
+bool is_ordered(vector<int> vec)
+{
+    for (int i = 0; i < vec.size() - 1; i++)
+        if (vec[i] > vec[i + 1])
+            return false;
+    return true;
+}
