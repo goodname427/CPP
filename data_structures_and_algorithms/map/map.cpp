@@ -2,7 +2,7 @@
 #include "../util/crand"
 using namespace std;
 
-#define EDGE_INF 0
+#define EDGE_INF -1
 
 class map_node;
 class edge;
@@ -60,7 +60,7 @@ public:
 
     vector<vector<int>> to_matrix()
     {
-        unordered_map<int, map_node*>::iterator max_ele = max_element(nodes.begin(), nodes.end());
+        unordered_map<int, map_node *>::iterator max_ele = max_element(nodes.begin(), nodes.end());
         int size = max_ele == nodes.end() ? 0 : max_ele->first + 1;
         vector<vector<int>> mat(size, vector<int>(size, EDGE_INF));
         for (auto e : edges)
@@ -75,22 +75,17 @@ graph *randomly_map(int max_size, int max_value, bool is_disdirect_map = true)
 {
     int size = random(max_size);
     graph *g = new graph;
+
+    // 新建节点
+    for (int i = 0; i < size; i++)
+        g->nodes.insert(pair<int, map_node *>(i, new map_node(random(max_value) + 1, i)));
+
     for (int i = 0; i < size; i++)
     {
         for (int j = is_disdirect_map ? i + 1 : 0; j < size; j++)
         {
             if (i == j || random(100) < 50)
                 continue;
-
-            // 新建节点
-            if (g->nodes.find(i) == g->nodes.end())
-            {
-                g->nodes.insert(pair<int, map_node *>(i, new map_node(random(max_value), i)));
-            }
-            if (g->nodes.find(j) == g->nodes.end())
-            {
-                g->nodes.insert(pair<int, map_node *>(j, new map_node(random(max_value), j)));
-            }
 
             // 插入对应的边
             int weight = random(max_value);
@@ -123,7 +118,7 @@ void print(const vector<vector<int>> &mat)
             if (!j)
                 cout << i << "  ";
 
-            cout << mat[i][j] << " ";
+            cout << (mat[i][j] == EDGE_INF ? "_" : to_string(mat[i][j])) << " ";
         }
         cout << endl;
     }
