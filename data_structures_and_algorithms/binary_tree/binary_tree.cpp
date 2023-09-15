@@ -111,7 +111,7 @@ void print_in_order(tree_node *root, int height, string to, int len)
     print_in_order(root->left, height + 1, "^", len);
 }
 
-void print_tree(tree_node *root)
+void print(tree_node *root)
 {
     cout << "Binary Tree:" << endl;
     print_in_order(root, 0, "H", 17);

@@ -104,7 +104,7 @@ int main()
     tree_node *root = randomly_tree(10, 100);
     tree_node *r_node = get_randomly_node(root);
 
-    print_tree(root);
+    print(root);
 
     cout << "node:";
     if (r_node)

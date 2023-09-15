@@ -45,7 +45,7 @@ int main()
     root->left->right = new_tree_node(5);
     root->right->left = new_tree_node(6);
     root->right->right = new_tree_node(7);
-    print_tree(root);
+    print(root);
     cout << is_full_tree(root) << endl;
     free_tree(root);
     return 0;

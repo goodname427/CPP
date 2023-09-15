@@ -139,7 +139,7 @@ graph *randomly_map(int max_size, int max_value, bool is_disdirect_map = true)
 
     // 新建节点
     for (int i = 0; i < size; i++)
-        g->nodes.insert(pair<int, map_node *>(i, new map_node(i, random(max_value) + 1)));
+        g->nodes.insert(pair<int, map_node *>(i, new map_node(i, random(1, max_value))));
 
     for (int i = 0; i < size; i++)
     {
