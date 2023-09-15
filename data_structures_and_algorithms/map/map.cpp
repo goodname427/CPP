@@ -18,8 +18,8 @@ public:
     vector<map_node *> nexts;
     vector<edge *> edges;
 
-    map_node(int id) : map_node(0, id) {}
-    map_node(int val, int id) : val(val), id(id)
+    map_node(int id) : map_node(id, 0) {}
+    map_node(int id, int val) : id(id), val(val)
     {
         in = 0;
         out = 0;
@@ -34,9 +34,14 @@ public:
         return e1.weight < e2.weight;
     }
 
-    static bool compare(const edge *&e1, const edge *&e2)
+    static bool compare2(const edge *e1, const edge *e2)
     {
         return e1->weight < e2->weight;
+    }
+
+    bool operator<(const edge &edge) const
+    {
+        return weight < edge.weight;
     }
 
 public:
@@ -67,6 +72,7 @@ public:
             delete n.second;
     }
 
+    // 在图中插入一条新边
     void insert_edge(int i, int j, int weight)
     {
         edge *e = new edge(nodes[i], nodes[j], weight);
@@ -77,11 +83,13 @@ public:
         edges.insert(e);
     }
 
+    // 转为临界矩阵的形式
     vector<vector<int>> to_matrix()
     {
         return to_matrix(edges);
     }
 
+    // 转为临界矩阵的形式
     vector<vector<int>> to_matrix(unordered_set<edge *> edges)
     {
         vector<edge *> _edges;
@@ -89,7 +97,8 @@ public:
             _edges.push_back(e);
         return to_matrix(_edges);
     }
-    
+
+    // 转为临界矩阵的形式
     vector<vector<int>> to_matrix(vector<edge *> edges)
     {
         unordered_map<int, map_node *>::iterator max_ele = max_element(nodes.begin(), nodes.end());
@@ -101,6 +110,26 @@ public:
         }
         return mat;
     }
+
+    // 根据边集重新构建图
+    graph *rebuild(unordered_set<edge *> edges)
+    {
+        graph *g = new graph;
+
+        // 初始化节点
+        for (auto n : nodes)
+        {
+            g->nodes.insert(pair<int, map_node *>(n.first, new map_node(n.first, n.second->val)));
+        }
+
+        // 构建节点关系
+        for (auto e : edges)
+        {
+            g->insert_edge(e->from->id, e->to->id, e->weight);
+        }
+
+        return g;
+    }
 };
 
 graph *randomly_map(int max_size, int max_value, bool is_disdirect_map = true)
@@ -110,7 +139,7 @@ graph *randomly_map(int max_size, int max_value, bool is_disdirect_map = true)
 
     // 新建节点
     for (int i = 0; i < size; i++)
-        g->nodes.insert(pair<int, map_node *>(i, new map_node(random(max_value) + 1, i)));
+        g->nodes.insert(pair<int, map_node *>(i, new map_node(i, random(max_value) + 1)));
 
     for (int i = 0; i < size; i++)
     {
@@ -153,11 +182,18 @@ void print(const vector<vector<int>> &mat)
             if (!j)
                 printf(p.c_str(), i);
 
-            if(mat[i][j] == EDGE_INF)
+            if (i == j)
+                printf("  \\ ");
+            else if (mat[i][j] == EDGE_INF)
                 printf("  _ ");
             else
                 printf(p.c_str(), mat[i][j]);
         }
         cout << endl;
     }
+}
+
+void print(graph *g)
+{
+    print(g->to_matrix());
 }

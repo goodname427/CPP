@@ -117,5 +117,6 @@ int main()
     cout << endl;
     cout << get_max_width(root) << endl;
     cout << get_max_width_no_map(root) << endl;
+    free_tree(root);
     return 0;
 }

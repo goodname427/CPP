@@ -130,5 +130,7 @@ int main()
 
     cout << "in order:";
     in_order(root);
+
+    free_tree(root);
     return 0;
 }

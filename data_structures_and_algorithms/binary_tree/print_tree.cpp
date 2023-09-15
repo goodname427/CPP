@@ -120,5 +120,7 @@ int main()
     cout << endl;
     post_order_no_recur(root);
     cout << endl;
+
+    free_tree(root);
     return 0;
 }

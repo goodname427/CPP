@@ -28,30 +28,30 @@ tree_node *build_tree(queue<int> &q)
 
     tree_node *root = new_tree_node(q.front() - 1);
     q.pop();
-    queue<tree_node*> bq;
+    queue<tree_node *> bq;
     bq.push(root);
-    
+
     tree_node *cur = NULL;
-    while(!bq.empty())
+    while (!bq.empty())
     {
         cur = bq.front();
         bq.pop();
 
-        if(q.empty())
+        if (q.empty())
             break;
-        if(q.front())
+        if (q.front())
         {
-            cur->left = new_tree_node(q.front()-1);
+            cur->left = new_tree_node(q.front() - 1);
             cur->left->parent = cur;
             bq.push(cur->left);
         }
         q.pop();
-        
-        if(q.empty())
+
+        if (q.empty())
             break;
-        if(q.front())
+        if (q.front())
         {
-            cur->right = new_tree_node(q.front()-1);
+            cur->right = new_tree_node(q.front() - 1);
             cur->right->parent = cur;
             bq.push(cur->right);
         }
@@ -66,11 +66,22 @@ tree_node *randomly_tree(int max_size, int max_value)
     queue<int> q;
     for (auto node : vec)
     {
-        if(random(100) < 10)
+        if (random(100) < 10)
             node = 0;
         q.push(node);
     }
     return build_tree(q);
+}
+
+void free_tree(tree_node *root)
+{
+    if (!root)
+        return;
+
+    free_tree(root->left);
+    free_tree(root->right);
+
+    delete root;
 }
 
 string get_space(int num)
