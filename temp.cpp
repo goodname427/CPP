@@ -25,7 +25,5 @@ public:
 
 int main()
 {
-    Solution s;
-    auto res = s.singleNumber({1, 2, 1, 3, 2, 5});
-    cout << res[0] << " " << res[1];
+    cout << (int)'a';
 }

@@ -56,7 +56,7 @@ void __merge(vector<int> &vec, int l, int m, int r)
     int p2 = m + 1;
 
     while (p1 <= m && p2 <= r)
-        help[i++] = vec[p1] < vec[p2] ? vec[p1++] : vec[p2++];
+        help[i++] = vec[p1] <= vec[p2] ? vec[p1++] : vec[p2++];
     while (p1 <= m)
         help[i++] = vec[p1++];
     while (p2 <= r)
