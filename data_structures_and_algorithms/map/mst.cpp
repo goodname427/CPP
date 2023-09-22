@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include "map.cpp"
+#include "../union_find_set/union_find_set.cpp"
 using namespace std;
 
 graph *prim(graph *g)
@@ -87,6 +88,45 @@ graph *kruskal(graph *g)
     return g->rebuild(mst);
 }
 
+graph *kruskal_ufs(graph *g)
+{
+    unordered_set<edge *> mst;
+    if (!g->nodes.size())
+        return g->rebuild(mst);
+
+    // 建立连通域, 开始时每个节点为一个单独的连通域
+    vector<map_node *> vec;
+    for (auto node : g->nodes)
+        vec.push_back(node.second);
+
+    union_find_set<map_node*> conn(vec);
+
+    // 添加所有边
+    unordered_set<edge *> edges;
+    for (auto e : g->edges)
+        edges.insert(e);
+
+    while (!edges.empty())
+    {
+        // 获取最小边
+        auto min = *min_element(edges.begin(), edges.end(), edge::compare2);
+        edges.erase(min);
+
+        // 判断最小边是否会形成环
+        if (conn.is_same_set(min->from, min->to))
+            continue;
+
+        // 将边从缓冲区移到结果区
+        mst.insert(min);
+
+        // 合并两个连通域
+        conn.union_set(min->from, min->to);
+    }
+    
+    return g->rebuild(mst);
+}
+
+
 void topology_sort(graph *g)
 {
     if(!g->nodes.size())
@@ -138,6 +178,10 @@ int main()
     graph *mst_kruskal = kruskal(g);
     cout << "kruskal:" << endl;
     print(mst_kruskal);
+    
+    graph *mst_kruskal_ufs = kruskal_ufs(g);
+    cout << "kruskal ufs:" << endl;
+    print(mst_kruskal_ufs);
 
     cout << "topology sort:" << endl;
     topology_sort(mst_prim);
@@ -145,5 +189,6 @@ int main()
     delete g;
     delete mst_prim;
     delete mst_kruskal;
+    delete mst_kruskal_ufs;
     return 0;
 }
