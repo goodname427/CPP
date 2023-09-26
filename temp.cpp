@@ -1,29 +1,37 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class Solution
-{
+class Solution {
 public:
-    vector<int> singleNumber(const vector<int> &nums)
+    int lengthOfLongestSubstring(string s) 
     {
-        int eor = 0;
-        for (auto i : nums)
-            eor ^= i;
-        
-        int filter = eor & (-eor);
-        vector<int> result(2, eor);
-        for (auto i : nums)
+        if (s.length() <= 1)
+            return s.length();
+
+        int start = 0, max_l = 0, i = 1;
+        unordered_map<char, int> has;
+        has.insert(pair<char, int>(s[0], 0));
+
+        for (; i < s.length(); i++)
         {
-            if (filter & i)
-                result[0] ^= i;
-            else
-                result[1] ^= i;
+            auto f = has.find(s[i]);
+            if (f != has.end())
+            {
+                max_l = max(max_l, i - start);
+                int j = start;
+                start = f->second + 1;
+                for (; j <= f->second; j++)
+                    has.erase(s[j]);
+            }
+            
+            has.insert(pair<char, int>(s[i], i));
         }
-        return result;
+
+        return max(max_l, i - start);
     }
 };
-
 int main()
 {
-    cout << (int)'a';
+    Solution s;
+    cout << s.lengthOfLongestSubstring("bbbbb");
 }

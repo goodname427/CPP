@@ -1,15 +1,8 @@
 #include <bits/stdc++.h>
-#include "../util/cvectorop"
+#include "stringop.cpp"
 using namespace std;
 
-string randomly_str(int max)
-{
-    vector<int> vec = randomly_vec(max, 10);
-    string res = "";
-    for (auto e : vec)
-        res += e + 'a';
-    return res;
-}
+
 
 vector<int> get_next(string pattern)
 {
