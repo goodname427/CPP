@@ -85,7 +85,7 @@ void test1()
     print(vec);
     int target;
     while (cin >> target)
-        cout << bs_left(target, vec, 0, vec.size());
+        cout << bs_left(target, vec, 0, vec.size() - 1);
 }
 
 void test2()
@@ -111,6 +111,6 @@ void test2()
 
 int main()
 { 
-    test2();
+    test1();
     return 0;
 }
