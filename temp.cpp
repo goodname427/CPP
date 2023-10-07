@@ -1,37 +1,77 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class Solution {
+class node
+{
 public:
-    int lengthOfLongestSubstring(string s) 
+    int happy;
+    vector<node *> sub;
+
+    node(int happy) : happy(happy)
     {
-        if (s.length() <= 1)
-            return s.length();
 
-        int start = 0, max_l = 0, i = 1;
-        unordered_map<char, int> has;
-        has.insert(pair<char, int>(s[0], 0));
+    }
 
-        for (; i < s.length(); i++)
+    ~node()
+    {
+        for (auto s : sub)
         {
-            auto f = has.find(s[i]);
-            if (f != has.end())
-            {
-                max_l = max(max_l, i - start);
-                int j = start;
-                start = f->second + 1;
-                for (; j <= f->second; j++)
-                    has.erase(s[j]);
-            }
-            
-            has.insert(pair<char, int>(s[i], i));
+            delete s;
         }
-
-        return max(max_l, i - start);
+        
     }
 };
+
+class info
+{
+public:
+    int max_happy;
+    int dont_come_max_happy;
+
+    info(int max_happy, int dont_come_max_happy) : max_happy(max_happy), dont_come_max_happy(dont_come_max_happy)
+    {
+    }
+};
+
+info get_max_happy(node *root)
+{
+    if (root->sub.empty())
+        return info(root->happy, 0);
+
+    int come = root->happy;
+    int dont_come = 0;
+
+    for (auto s : root->sub)
+    {
+        info res = get_max_happy(s);
+        come += res.dont_come_max_happy;
+        dont_come += res.max_happy;
+    }
+
+    return info(max(come, dont_come), dont_come);
+}
+
 int main()
 {
-    Solution s;
-    cout << s.lengthOfLongestSubstring("bbbbb");
+    int n, root;
+    cin >> n >> root;
+    vector<node *> nodes(n + 1);
+    nodes[0] = NULL;
+    for (int i = 1; i <= n; i++)
+    {
+        int happy;
+        cin >> happy;
+        nodes[i] = new node(happy);
+    }
+
+    for (int i = 0; i < n - 1; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+        nodes[u]->sub.push_back(nodes[v]);
+    }
+
+    cout << get_max_happy(nodes[root]).max_happy << endl;
+
+    delete nodes[root];
 }

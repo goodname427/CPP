@@ -102,23 +102,64 @@ void post_order_no_recur(tree_node *root)
     }
 }
 
+void morris(tree_node *root)
+{
+    if (!root)
+        return;
+
+    tree_node* cur = root;
+    tree_node* rightest = NULL;
+    while (cur)
+    {
+        rightest = cur->left;
+        if (rightest)
+        {
+            while (rightest->right != NULL && rightest->right != cur)
+            {
+                rightest = rightest->right;
+            }
+            
+            if (!rightest->right)
+            {
+                rightest->right = cur;
+                cur = cur->left;
+                continue;
+            } 
+            else
+            {
+                rightest->right = NULL;
+            }
+        }
+        cout << cur->val << " ";
+        cur = cur->right;
+    }
+    
+}
+
 int main()
 {
     tree_node *root = randomly_tree(10, 10);
 
+    cout << "先序：" << endl;
     pre_order(root);
     cout << endl;
     pre_order_no_recur(root);
     cout << endl;
 
+    cout << "中序：" << endl;
     in_order(root);
     cout << endl;
     in_order_no_recur(root);
     cout << endl;
 
+    cout << "后序：" << endl;
     post_order(root);
     cout << endl;
     post_order_no_recur(root);
+    cout << endl;
+
+    cout << "morris中序：" << endl;
+    morris(root);
     cout << endl;
 
     free_tree(root);
