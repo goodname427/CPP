@@ -20,42 +20,53 @@ void cout_vector(vector<T> vec, void func(T))
     cout << endl;
 }
 
-class Solution {
+struct TreeNode
+{
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+class Solution
+{
 public:
-    void hanota(vector<int>& A, vector<int>& B, vector<int>& C, int i)
+    void binaryTreePaths(TreeNode *root, string &path, vector<string> &res)
     {
-        if (i == 1)
+        int len = path.length();
+        path.insert(path.length(), (len ? "->" : "") + to_string(root->val));
+        cout << path << endl;
+        if (!root->left && !root->right)
         {
-            B.push_back(A[A.size() - 1]);
-            A.pop_back();
-            return;
+            res.push_back(path);
         }
-        
-        hanota(A, C, B, i - 1);
-        hanota(A, B, C, 1);
-        hanota(C, B, A, i - 1);
+        else
+        {
+            binaryTreePaths(root->left, path, res);
+            binaryTreePaths(root->right, path, res);
+        }
+
+        path.erase(len);
     }
 
-    void hanota(vector<int>& A, vector<int>& B, vector<int>& C) 
+    vector<string> binaryTreePaths(TreeNode *root)
     {
-        if (A.size() == 0)
-            return;
-
-        hanota(A, B, C, A.size());
+        vector<string> res;
+        string path = "";
+        binaryTreePaths(root, path, res);
+        return res;
     }
 };
+
 int main()
 {
     Solution solution;
     // vector<vector<int>> vec = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
-    vector<int> vec1 {1, 2};
+    vector<int> vec1{1, 2};
     vector<int> vec2;
     vector<int> vec3;
-    solution.hanota(vec1, vec2, vec3);
-    cout_vector(vec1);
-    cout_vector(vec2);
-    cout_vector(vec3);
-    // auto r = solution.candy({2, 1, 2});
-    // cout << 1;
+    cout_vector(solution.binaryTreePaths(new TreeNode(0)));
     return 0;
 }
