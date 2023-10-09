@@ -6,7 +6,6 @@ int sign(int n)
     return !((n >> 31) & 1);
 }
 
-
 int add(int a, int b)
 {
     int sum = a;

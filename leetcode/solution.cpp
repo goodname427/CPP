@@ -30,33 +30,32 @@ struct TreeNode
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
-class Solution
-{
+class Solution {
 public:
-    void binaryTreePaths(TreeNode *root, string &path, vector<string> &res)
+    typedef unsigned long long INT;
+
+    INT numberOfWays(int startPos, int endPos, int k) 
     {
-        int len = path.length();
-        path.insert(path.length(), (len ? "->" : "") + to_string(root->val));
-        cout << path << endl;
-        if (!root->left && !root->right)
+        int diff = endPos - startPos;
+        vector<vector<INT>> dp(k + 1, vector<INT>(k + 1, 0));
+        startPos = (k - diff) >> 1;
+        endPos = startPos + diff;
+
+        dp[0][endPos] = 1;
+
+        for (int i = 1; i <= k; i++)
         {
-            res.push_back(path);
-        }
-        else
-        {
-            binaryTreePaths(root->left, path, res);
-            binaryTreePaths(root->right, path, res);
+            for (int j = 0; j < dp[0].size(); j++)
+            {
+                if(j > 0)
+                    dp[i][j] += dp[i - 1][j - 1];  
+                if(j < dp[0].size() - 1)
+                    dp[i][j] += dp[i - 1][j + 1];
+            }
         }
 
-        path.erase(len);
-    }
-
-    vector<string> binaryTreePaths(TreeNode *root)
-    {
-        vector<string> res;
-        string path = "";
-        binaryTreePaths(root, path, res);
-        return res;
+        cout_vector(dp, cout_vector);
+        return dp[k][startPos];
     }
 };
 
@@ -67,6 +66,6 @@ int main()
     vector<int> vec1{1, 2};
     vector<int> vec2;
     vector<int> vec3;
-    cout_vector(solution.binaryTreePaths(new TreeNode(0)));
+    cout << solution.numberOfWays(989, 1000, 99) << endl;
     return 0;
 }
