@@ -20,42 +20,26 @@ void cout_vector(vector<T> vec, void func(T))
     cout << endl;
 }
 
-struct TreeNode
+class Solution
 {
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
-};
-
-class Solution {
 public:
-    typedef unsigned long long INT;
-
-    INT numberOfWays(int startPos, int endPos, int k) 
+    string longestPrefix(string s)
     {
-        int diff = endPos - startPos;
-        vector<vector<INT>> dp(k + 1, vector<INT>(k + 1, 0));
-        startPos = (k - diff) >> 1;
-        endPos = startPos + diff;
-
-        dp[0][endPos] = 1;
-
-        for (int i = 1; i <= k; i++)
+        int n = s.size();
+        vector<int> fail(n, -1);
+        for (int i = 1; i < n; ++i)
         {
-            for (int j = 0; j < dp[0].size(); j++)
+            int j = fail[i - 1];
+            while (j != -1 && s[j + 1] != s[i])
             {
-                if(j > 0)
-                    dp[i][j] += dp[i - 1][j - 1];  
-                if(j < dp[0].size() - 1)
-                    dp[i][j] += dp[i - 1][j + 1];
+                j = fail[j];
+            }
+            if (s[j + 1] == s[i])
+            {
+                fail[i] = j + 1;
             }
         }
-
-        cout_vector(dp, cout_vector);
-        return dp[k][startPos];
+        return s.substr(0, fail[n - 1] + 1);
     }
 };
 
@@ -66,6 +50,6 @@ int main()
     vector<int> vec1{1, 2};
     vector<int> vec2;
     vector<int> vec3;
-    cout << solution.numberOfWays(989, 1000, 99) << endl;
+    cout << solution.longestPrefix("bba") << endl;
     return 0;
 }
