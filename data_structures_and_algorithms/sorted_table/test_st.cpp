@@ -55,7 +55,7 @@ bool is_st(st_node *root, int &out_min, int &out_max)
         res = is_st(root->left, _min, _max);
         if (!res || _max > root->val)
             return false;
-        
+
         out_min = min(_min, out_min);
     }
     if (root->right)
@@ -63,7 +63,7 @@ bool is_st(st_node *root, int &out_min, int &out_max)
         res = is_st(root->right, _min, _max);
         if (!res || _min < root->val)
             return false;
-        
+
         out_max = min(_max, out_max);
     }
 
@@ -79,7 +79,7 @@ bool is_st(st_node *root)
 int main()
 {
     int temp;
-    int node_count = 1000;
+    int node_count = 10;
     st_node *root = new st_node(node_count / 2);
     unordered_set<int> set{node_count / 2};
 
@@ -94,7 +94,7 @@ int main()
 
         root->insert(temp);
     }
-    // print(root, "init");
+    print(root, "init");
 
     // find
     // while (cin >> temp)
@@ -109,16 +109,25 @@ int main()
     //     root = root->erase(temp);
     //     root->print();
     // }
-    while (!set.empty())
-    {
-        root = root->erase(*set.begin());
-        if (!is_st(root))
-        {
-            print(root, "error");
-            break;
-        }
-        set.erase(set.begin());
-    }
+    // while (!set.empty())
+    // {
+    //     root = root->erase(*set.begin());
+    //     if (!is_st(root))
+    //     {
+    //         print(root, "error");
+    //         break;
+    //     }
+    //     set.erase(set.begin());
+    // }
+
+    // rotate
+    // while (cin >> temp)
+    // {
+    root = root->rotate_left();
+    print(root);
+    root = root->rotate_right();
+    print(root);
+    // }
 
     delete root;
     return 0;

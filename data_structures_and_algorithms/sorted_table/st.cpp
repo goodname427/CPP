@@ -15,16 +15,16 @@ protected:
         }
 
         // 直接使用左右孩子替换当前节点
-        if (node->left && !node->left->right)
-        {
-            node->left->right = node->right;
-            return node->left;
-        }
-        if (node->right && !node->right->left)
-        {
-            node->right->left = node->left;
-            return node->right;
-        }
+        // if (node->right && !node->right->left)
+        // {
+        //     node->right->left = node->left;
+        //     return node->right;
+        // }
+        // if (node->left && !node->left->right)
+        // {
+        //     node->left->right = node->right;
+        //     return node->left;
+        // }
 
         // 寻找右树上最左的节点(或者左树上的最右节点)替换当前节点
         bool has_right = node->right;
@@ -48,7 +48,7 @@ protected:
 
     /// @brief 移除树上值为val的节点
     /// @param root 根节点
-    /// @param val 
+    /// @param val
     /// @return 移除之后树的根节点
     static st_node *erase(st_node *root, int val)
     {
@@ -76,16 +76,21 @@ protected:
         return root;
     }
 
+protected:
+    /// @brief 动态创建一个节点
+    /// @param val 
+    /// @return 创建好的节点
+    st_node *allocator(int val)
+    {
+        return new st_node(val, this);
+    }
 public:
     int val;
+    st_node *parent;
     st_node *left;
     st_node *right;
 
-    st_node(int val) : st_node(val, nullptr, nullptr)
-    {
-    }
-
-    st_node(int val, st_node *left, st_node *right) : val(val), left(left), right(right)
+    st_node(int val, st_node *parent = nullptr, st_node *left = nullptr, st_node *right = nullptr) : val(val), parent(parent), left(left), right(right)
     {
     }
 
@@ -97,28 +102,23 @@ public:
             delete right;
     }
 
-    bool is_st()
-    {
-        
-    }
-
     /// @brief 插入一个值为val的节点 (val不能与树上已有节点val冲突)
     /// @param val
-    void insert(int val)
+    st_node *insert(int val)
     {
         if (val < this->val)
         {
             if (!left)
-                left = new st_node(val);
+                return left = allocator(val);
             else
-                left->insert(val);
+                return left->insert(val);
         }
         else
         {
             if (!right)
-                right = new st_node(val);
+                return right = allocator(val);
             else
-                right->insert(val);
+                return right->insert(val);
         }
     }
 
@@ -142,5 +142,23 @@ public:
     st_node *erase(int val)
     {
         return erase(this, val);
+    }
+
+    /// @brief 左旋
+    /// @return 左旋之后树的根节点
+    st_node *rotate_left()
+    {
+        st_node *cur = right;
+        right = cur->left;
+        cur->left = this;
+        return cur;
+    }
+
+    st_node *rotate_right()
+    {
+        st_node *cur = left;
+        left = cur->right;
+        cur->right = this;
+        return cur;
     }
 };
