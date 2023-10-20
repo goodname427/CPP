@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool __has_srand = false;
+static bool __has_srand = false;
 
 //返回一个随机数
 int random()
