@@ -5,5 +5,5 @@ std::optional<string> a;
 
 int main()
 {
-    a = nullopt;
+    cout << 1 << endl;
 }
