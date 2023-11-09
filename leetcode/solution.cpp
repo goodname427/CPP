@@ -20,26 +20,55 @@ void cout_vector(vector<T> vec, void func(T))
     cout << endl;
 }
 
-class Solution
-{
+class Solution {
 public:
-    string longestPrefix(string s)
+    int orangesRotting(vector<vector<int>> &grid) 
     {
-        int n = s.size();
-        vector<int> fail(n, -1);
-        for (int i = 1; i < n; ++i)
+        queue<pair<int, int>> q;
+        int remind = 0;
+        int m = grid.size();
+        int n = grid[0].size();
+
+        for (int i = 0; i < m; i++)
         {
-            int j = fail[i - 1];
-            while (j != -1 && s[j + 1] != s[i])
+            for (int j = 0; j < n; j++)
             {
-                j = fail[j];
-            }
-            if (s[j + 1] == s[i])
-            {
-                fail[i] = j + 1;
+                if (grid[i][j] == 2)
+                {
+                    q.push({i, j});
+                }
+                else if (grid[i][j] == 1)
+                {
+                    remind++;
+                }
             }
         }
-        return s.substr(0, fail[n - 1] + 1);
+
+        int res = 2;
+        int dir[] = {1, 0, -1, 0, 0, 1, 0, -1};
+        while (!q.empty())
+        {
+            pair<int, int> pos = q.front();
+            q.pop();
+
+            for (int i = 0; i < 4; i++)
+            {
+                int x = pos.first + dir[2 * i];
+                int y = pos.second + dir[2 * i + 1];
+            
+                if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] != 1)
+                    continue;
+
+                grid[x][y] = grid[pos.first][pos.second] + 1;
+                q.push({x, y});
+                res = grid[x][y];
+                
+                // if(--remind == 0)
+                //     return res;
+            }
+        }
+
+        return remind ? -1 : (res - 2);
     }
 };
 
@@ -50,6 +79,11 @@ int main()
     vector<int> vec1{1, 2};
     vector<int> vec2;
     vector<int> vec3;
-    cout << solution.longestPrefix("bba") << endl;
+    vector<vector<int>> vec4 = {
+        {2, 1, 1},
+        {1, 1, 0},
+        {0, 1, 1}
+    };
+    cout << solution.orangesRotting(vec4) << endl;
     return 0;
 }
