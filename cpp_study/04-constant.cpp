@@ -1,6 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+#define M 100
+
 int main()
 {
     const int a = 10;
@@ -15,12 +17,14 @@ ad\
 asd asda sd asd as\
 asd asdasdasdasd\
     ";
+    
 
     cout << a << endl
          << b << endl
          << c << endl
          << f << endl
          << g << endl
-         << s << endl;
+         << s << endl
+         << M << endl;
     return 0;
 }

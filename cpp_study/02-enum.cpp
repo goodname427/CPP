@@ -31,5 +31,6 @@ int main()
     paint(color::red);
     paint(color::blue);
     paint(color::green);
+    paint(red);
     return 0;
 }
