@@ -22,53 +22,34 @@ void cout_vector(vector<T> vec, void func(T))
 
 class Solution {
 public:
-    int orangesRotting(vector<vector<int>> &grid) 
+    int search(vector<int> &nums, int &target, bool lowwer, int l, int r)
     {
-        queue<pair<int, int>> q;
-        int remind = 0;
-        int m = grid.size();
-        int n = grid[0].size();
+        if (l > r)
+            return -1;
 
-        for (int i = 0; i < m; i++)
+        int mid = l + ((r - l) >> 1);
+
+        if (nums[mid] == target)
         {
-            for (int j = 0; j < n; j++)
-            {
-                if (grid[i][j] == 2)
-                {
-                    q.push({i, j});
-                }
-                else if (grid[i][j] == 1)
-                {
-                    remind++;
-                }
-            }
-        }
-
-        int res = 2;
-        int dir[] = {1, 0, -1, 0, 0, 1, 0, -1};
-        while (!q.empty())
-        {
-            pair<int, int> pos = q.front();
-            q.pop();
-
-            for (int i = 0; i < 4; i++)
-            {
-                int x = pos.first + dir[2 * i];
-                int y = pos.second + dir[2 * i + 1];
+            int res = lowwer? 
+                search(nums, target, lowwer, l, mid - 1): 
+                search(nums, target, lowwer, mid + 1, r);
             
-                if (x < 0 || x >= m || y < 0 || y >= n || grid[x][y] != 1)
-                    continue;
-
-                grid[x][y] = grid[pos.first][pos.second] + 1;
-                q.push({x, y});
-                res = grid[x][y];
-                
-                // if(--remind == 0)
-                //     return res;
-            }
+            return res != -1 ? res : mid;
         }
 
-        return remind ? -1 : (res - 2);
+        if (target < nums[mid])
+            return search(nums, target, lowwer, l, mid - 1);
+
+        return search(nums, target, lowwer, mid + 1, r); 
+    }
+
+    vector<int> searchRange(vector<int>& nums, int target) 
+    {   
+        return {
+            search(nums, target, 0, true, nums.size() - 1),
+            search(nums, target, 0, false, nums.size() - 1)
+        };
     }
 };
 
@@ -76,7 +57,7 @@ int main()
 {
     Solution solution;
     // vector<vector<int>> vec = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
-    vector<int> vec1{1, 2};
+    vector<int> vec1{5,7,7,8,8,10};
     vector<int> vec2;
     vector<int> vec3;
     vector<vector<int>> vec4 = {
@@ -84,6 +65,6 @@ int main()
         {1, 1, 0},
         {0, 1, 1}
     };
-    cout << solution.orangesRotting(vec4) << endl;
+    cout_vector(solution.searchRange(vec1, 8));
     return 0;
 }
