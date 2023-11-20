@@ -22,34 +22,49 @@ void cout_vector(vector<T> vec, void func(T))
 
 class Solution {
 public:
-    int search(vector<int> &nums, int &target, bool lowwer, int l, int r)
+    int findDuplicate(const vector<int>& nums) 
     {
-        if (l > r)
-            return -1;
-
-        int mid = l + ((r - l) >> 1);
-
-        if (nums[mid] == target)
+        int n = nums.size();
+        int div = 2;
+        vector<int> count(div, 0);
+        int begin = 1;
+        int end = n;
+        int len = n / div;
+        while (1)
         {
-            int res = lowwer? 
-                search(nums, target, lowwer, l, mid - 1): 
-                search(nums, target, lowwer, mid + 1, r);
-            
-            return res != -1 ? res : mid;
+            for (int i = 0; i < n; i++)
+            {
+                if (nums[i] >= begin && nums[i] < end)
+                    count[(nums[i] - begin) / len]++;
+            }
+
+            cout << begin << " " << end << " " << len << endl;
+            cout_vector(count);
+
+            if (len == 2)
+                return 1;
+
+            for (int i = 0; i < div; i++)
+            {
+                if (count[i] > len)
+                {
+                    if (len == 1)
+                        return begin + i;
+
+                    end = begin + (i + 1) * len;
+                    begin = begin + i * len;
+                    len /= div;
+                    break;
+                }
+            }
+
+            for (int i = 0; i < div; i++)
+            {
+                count[i] = 0;
+            }
         }
 
-        if (target < nums[mid])
-            return search(nums, target, lowwer, l, mid - 1);
-
-        return search(nums, target, lowwer, mid + 1, r); 
-    }
-
-    vector<int> searchRange(vector<int>& nums, int target) 
-    {   
-        return {
-            search(nums, target, 0, true, nums.size() - 1),
-            search(nums, target, 0, false, nums.size() - 1)
-        };
+        return 0;
     }
 };
 
@@ -65,6 +80,6 @@ int main()
         {1, 1, 0},
         {0, 1, 1}
     };
-    cout_vector(solution.searchRange(vec1, 8));
+    cout << solution.findDuplicate({1,5,5,6,2,8,4,7,5,5});
     return 0;
 }
