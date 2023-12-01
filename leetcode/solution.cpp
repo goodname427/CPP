@@ -2,7 +2,7 @@
 using namespace std;
 
 template <class T>
-void cout_vector(vector<T> vec)
+void print(vector<T> vec)
 {
     for (auto e : vec)
     {
@@ -11,7 +11,7 @@ void cout_vector(vector<T> vec)
     cout << endl;
 }
 template <class T>
-void cout_vector(vector<T> vec, void func(T))
+void print(vector<T> vec, void func(T))
 {
     for (auto e : vec)
     {
@@ -22,49 +22,53 @@ void cout_vector(vector<T> vec, void func(T))
 
 class Solution {
 public:
-    int findDuplicate(const vector<int>& nums) 
+    int candy(const vector<int>& ratings) 
     {
-        int n = nums.size();
-        int div = 2;
-        vector<int> count(div, 0);
-        int begin = 1;
-        int end = n;
-        int len = n / div;
-        while (1)
+        int n = ratings.size();
+        vector<int> left(n, 0);
+        left[0] = 1;
+        for (int i = 1; i < n; i++)
         {
-            for (int i = 0; i < n; i++)
+            if (ratings[i - 1] < ratings[i])
             {
-                if (nums[i] >= begin && nums[i] < end)
-                    count[(nums[i] - begin) / len]++;
+                left[i] = left[i - 1] + 1;
             }
-
-            cout << begin << " " << end << " " << len << endl;
-            cout_vector(count);
-
-            if (len == 2)
-                return 1;
-
-            for (int i = 0; i < div; i++)
+            else if (ratings[i - 1] == ratings[i])
             {
-                if (count[i] > len)
-                {
-                    if (len == 1)
-                        return begin + i;
-
-                    end = begin + (i + 1) * len;
-                    begin = begin + i * len;
-                    len /= div;
-                    break;
-                }
+                left[i] = 1;
             }
-
-            for (int i = 0; i < div; i++)
+            else
             {
-                count[i] = 0;
+                left[i] = 1;
             }
         }
 
-        return 0;
+        vector<int> right(n, 0);
+        right[n - 1] = 1;
+        for (int i = n - 2; i >= 0; i--)
+        {
+            if (ratings[i] > ratings[i + 1])
+            {
+                right[i] = right[i + 1] + 1;
+            }
+            else if (ratings[i] == ratings[i + 1])
+            {
+                right[i] = 1;
+            }
+            else
+            {
+                right[i] = 1;
+            }
+        }
+
+        print(left);
+        print(right);
+
+        int res = 0;
+        for (int i = 0; i < n; i++)
+            res += max(left[i], right[i]);
+
+        return res;
     }
 };
 
@@ -80,6 +84,7 @@ int main()
         {1, 1, 0},
         {0, 1, 1}
     };
-    cout << solution.findDuplicate({1,5,5,6,2,8,4,7,5,5});
+    //                      1 2 3 4 2 1
+    cout << solution.candy({0,1,2,3,2,1});
     return 0;
 }
