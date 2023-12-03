@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#include "solution.h"
 using namespace std;
 
 template <class T>
@@ -6,7 +7,7 @@ void print(vector<T> vec)
 {
     for (auto e : vec)
     {
-        cout << e << " ";
+        cout << e << ' ';
     }
     cout << endl;
 }
@@ -19,58 +20,6 @@ void print(vector<T> vec, void func(T))
     }
     cout << endl;
 }
-
-class Solution {
-public:
-    int candy(const vector<int>& ratings) 
-    {
-        int n = ratings.size();
-        vector<int> left(n, 0);
-        left[0] = 1;
-        for (int i = 1; i < n; i++)
-        {
-            if (ratings[i - 1] < ratings[i])
-            {
-                left[i] = left[i - 1] + 1;
-            }
-            else if (ratings[i - 1] == ratings[i])
-            {
-                left[i] = 1;
-            }
-            else
-            {
-                left[i] = 1;
-            }
-        }
-
-        vector<int> right(n, 0);
-        right[n - 1] = 1;
-        for (int i = n - 2; i >= 0; i--)
-        {
-            if (ratings[i] > ratings[i + 1])
-            {
-                right[i] = right[i + 1] + 1;
-            }
-            else if (ratings[i] == ratings[i + 1])
-            {
-                right[i] = 1;
-            }
-            else
-            {
-                right[i] = 1;
-            }
-        }
-
-        print(left);
-        print(right);
-
-        int res = 0;
-        for (int i = 0; i < n; i++)
-            res += max(left[i], right[i]);
-
-        return res;
-    }
-};
 
 int main()
 {
@@ -85,6 +34,16 @@ int main()
         {0, 1, 1}
     };
     //                      1 2 3 4 2 1
-    cout << solution.candy({0,1,2,3,2,1});
+    cout << solution.isValidSudoku({
+        {'.','.','.','.','5','.','.','1','.'},
+        {'.','4','.','3','.','.','.','.','.'},
+        {'.','.','.','.','.','3','.','.','1'},
+        {'8','.','.','.','.','.','.','2','.'},
+        {'.','.','2','.','7','.','.','.','.'},
+        {'.','1','5','.','.','.','.','.','.'},
+        {'.','.','.','.','.','2','.','.','.'},
+        {'.','2','.','9','.','.','.','.','.'},
+        {'.','.','4','.','.','.','.','.','.'}
+    });
     return 0;
 }
