@@ -2,11 +2,13 @@
 #include "oop-demo.h"
 using namespace std;
 
+void Test()
+{
+    Derived d;
+}
+
 int main()
 {
-    Account::set_rate(5.0);
-
-    Account a;
-    a.set_rate(7.0);    
+    Test();
     return 0;
 }
