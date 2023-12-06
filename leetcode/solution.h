@@ -3,29 +3,49 @@ using namespace std;
 
 class Solution {
 public:
-    bool isValidSudoku(const vector<vector<char>>& board) 
+    bool wordPattern(string pattern, string s) 
     {
-        short x_flag[9];
-        short y_flag[9];;
-        memset(x_flag, 0, sizeof(short) * 9);
-        memset(y_flag, 0, sizeof(short) * 9);
+        unordered_map<char, int> pMap;
+        unordered_map<string, int> sMap;
 
-        for (int i = 0; i < 9; i++)
+        int pIdx = 0;
+        int sIdx = 0;
+        int j = 0;
+
+        int start = -1;
+        string word;
+        for (int i = 0; i < s.length(); i++)
         {
-            for (int j = 0; j < 9; j++)
+            if (start == -1 && s[i] != ' ')
             {
-                if (board[i][j] == '.')
-                    continue;
-                else 
-                {
-                    int a = 1 << (board[i][j] - '0');
-                    if ((x_flag[i] & a) || (y_flag[j] & a))
-                        return false;
-
-                    x_flag[i] |= a;
-                    y_flag[j] |= a;
-                }
+                start = i;
             }
+            else if (s[i] == ' ' && start != -1)
+            {
+                
+                word = s.substr(start, i - start);
+                start = -1;
+                if (sMap.find(word) == sMap.end())
+                    sMap.insert({word, sIdx++});
+                if (pMap.find(pattern[j]) == pMap.end())
+                    pMap.insert({pattern[j], pIdx++});
+
+                if (sMap[word] != pMap[pattern[j]])
+                    return false;
+                j++;
+            }
+        }
+
+        if (start != -1)
+        {
+            word = s.substr(start, s.length() - start);
+            if (sMap.find(word) == sMap.end())
+                sMap.insert({word, sIdx++});
+            if (pMap.find(pattern[j]) == pMap.end())
+                pMap.insert({pattern[j], pIdx++});
+
+            if (sMap[word] != pMap[pattern[j]])
+                return false;
         }
 
         return true;
