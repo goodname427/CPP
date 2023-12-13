@@ -3,51 +3,50 @@ using namespace std;
 
 class Solution {
 public:
-    bool wordPattern(string pattern, string s) 
+    string simplifyPath(string path) 
     {
-        unordered_map<char, int> pMap;
-        unordered_map<string, int> sMap;
-
-        int pIdx = 0;
-        int sIdx = 0;
-        int j = 0;
-
-        int start = -1;
-        string word;
-        for (int i = 0; i < s.length(); i++)
+        deque<string> q;
+        string temp = "";
+        for (char &c : path)
         {
-            if (start == -1 && s[i] != ' ')
+            if (c == '/')
             {
-                start = i;
+                // 双重斜杠过滤掉
+                if (temp.length() == 0)
+                {
+                    continue;
+                }
+                else
+                {
+                    if (temp == "..")
+                    {
+                        q.pop_back();
+                    }
+                    else if (temp != ".")
+                    {
+                        q.push_back(temp);
+                    }
+                    temp.clear();
+                }
             }
-            else if (s[i] == ' ' && start != -1)
+            else
             {
-                
-                word = s.substr(start, i - start);
-                start = -1;
-                if (sMap.find(word) == sMap.end())
-                    sMap.insert({word, sIdx++});
-                if (pMap.find(pattern[j]) == pMap.end())
-                    pMap.insert({pattern[j], pIdx++});
-
-                if (sMap[word] != pMap[pattern[j]])
-                    return false;
-                j++;
+                temp.push_back(c);
             }
         }
 
-        if (start != -1)
+        if (temp.length() > 0)
         {
-            word = s.substr(start, s.length() - start);
-            if (sMap.find(word) == sMap.end())
-                sMap.insert({word, sIdx++});
-            if (pMap.find(pattern[j]) == pMap.end())
-                pMap.insert({pattern[j], pIdx++});
-
-            if (sMap[word] != pMap[pattern[j]])
-                return false;
+            q.push_back(temp);
         }
 
-        return true;
+        string res = "";
+        while (!q.empty())
+        {
+            res += "/" + q.front();
+            q.pop_front();
+        }
+
+        return res;
     }
 };
