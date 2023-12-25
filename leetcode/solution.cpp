@@ -34,6 +34,19 @@ int main()
         {0, 1, 1}
     };
     //                      1 2 3 4 2 1
-    cout << solution.simplifyPath("/../");
+
+    
+    ListNode *list1 = new ListNode(-9);
+    list1->next = new ListNode(3);
+    ListNode *list2 = new ListNode(5);
+    list2->next = new ListNode(7);
+    // cout << 
+    solution.mergeTwoLists(list1, list2);
+    
+    delete list1->next;
+    delete list1;
+    delete list2->next;
+    delete list2;
+
     return 0;
 }

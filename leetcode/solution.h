@@ -1,52 +1,63 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+
+struct ListNode 
+{
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+
 class Solution {
 public:
-    string simplifyPath(string path) 
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) 
     {
-        deque<string> q;
-        string temp = "";
-        for (char &c : path)
+        if (!list1 && !list2)
+            return nullptr;
+        
+        if (!list1)
+            return list2;
+        
+        if (!list2)
+            return list1;
+
+        ListNode *hair = new ListNode();
+        ListNode *cur = hair;
+
+        while (list1 && list2)
         {
-            if (c == '/')
+            if (list1->val <= list2->val)
             {
-                // 双重斜杠过滤掉
-                if (temp.length() == 0)
-                {
-                    continue;
-                }
-                else
-                {
-                    if (temp == "..")
-                    {
-                        q.pop_back();
-                    }
-                    else if (temp != ".")
-                    {
-                        q.push_back(temp);
-                    }
-                    temp.clear();
-                }
+                cur->next = list1;
+                list1 = list1->next;
             }
             else
             {
-                temp.push_back(c);
+                cur->next = list2;
+                list2 = list2->next;
             }
+            
+            cur = cur->next;
         }
 
-        if (temp.length() > 0)
+        while (list1)
         {
-            q.push_back(temp);
+            cur->next = list1;
+            list1 = list1->next;
         }
 
-        string res = "";
-        while (!q.empty())
+        while (list2)
         {
-            res += "/" + q.front();
-            q.pop_front();
+            cur->next = list2;
+            list2 = list2->next;
         }
 
-        return res;
+        cur = hair->next;
+        delete hair;
+        return cur;
     }
 };
+
