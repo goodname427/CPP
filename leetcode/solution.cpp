@@ -3,50 +3,45 @@
 using namespace std;
 
 template <class T>
-void print(vector<T> vec)
+ostream &operator<<(ostream &os, const vector<T> &vec)
 {
     for (auto e : vec)
     {
-        cout << e << ' ';
+        os << e << " ";
     }
-    cout << endl;
+
+    return os;
 }
+
 template <class T>
-void print(vector<T> vec, void func(T))
+ostream &operator<<(ostream &os, const vector<vector<T>> &vec)
 {
     for (auto e : vec)
     {
-        func(e);
+        os << e << endl;
     }
-    cout << endl;
+
+    return os;
 }
+
+
 
 int main()
 {
     Solution solution;
     // vector<vector<int>> vec = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
-    vector<int> vec1{5,7,7,8,8,10};
+    vector<int> vec1{5, 7, 7, 8, 8, 10};
     vector<int> vec2;
     vector<int> vec3;
     vector<vector<int>> vec4 = {
         {2, 1, 1},
         {1, 1, 0},
-        {0, 1, 1}
-    };
+        {0, 1, 1}};
     //                      1 2 3 4 2 1
 
-    
-    ListNode *list1 = new ListNode(-9);
-    list1->next = new ListNode(3);
-    ListNode *list2 = new ListNode(5);
-    list2->next = new ListNode(7);
-    // cout << 
-    solution.mergeTwoLists(list1, list2);
-    
-    delete list1->next;
-    delete list1;
-    delete list2->next;
-    delete list2;
-
+    //cout << solution.calcEquation({{"a", "b"}, {"b", "c"}, {"bc", "cd"}}, {1.5, 2.5, 5.0}, {{"a", "c"}, {"c", "b"}, {"bc", "cd"}, {"cd", "bc"}});
+    //cout << solution.calcEquation({{"a","b"},{"b","c"}}, {2.0,3.0}, {{"a", "c"}, {"c", "b"}, {"bc", "cd"}, {"cd", "bc"}});
+    // cout << vector<vector<string>> {{"a","b"},{"b","c"}};
+    cout << vector<string> {"b","c"};
     return 0;
 }
