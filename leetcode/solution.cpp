@@ -24,24 +24,13 @@ ostream &operator<<(ostream &os, const vector<vector<T>> &vec)
     return os;
 }
 
-
-
 int main()
 {
     Solution solution;
-    // vector<vector<int>> vec = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
-    vector<int> vec1{5, 7, 7, 8, 8, 10};
-    vector<int> vec2;
-    vector<int> vec3;
-    vector<vector<int>> vec4 = {
-        {2, 1, 1},
-        {1, 1, 0},
-        {0, 1, 1}};
-    //                      1 2 3 4 2 1
 
-    //cout << solution.calcEquation({{"a", "b"}, {"b", "c"}, {"bc", "cd"}}, {1.5, 2.5, 5.0}, {{"a", "c"}, {"c", "b"}, {"bc", "cd"}, {"cd", "bc"}});
-    //cout << solution.calcEquation({{"a","b"},{"b","c"}}, {2.0,3.0}, {{"a", "c"}, {"c", "b"}, {"bc", "cd"}, {"cd", "bc"}});
-    // cout << vector<vector<string>> {{"a","b"},{"b","c"}};
-    cout << vector<string> {"b","c"};
+    // int i, j;
+    // solution.get_pos(6, 35, i, j);
+    // cout << i << " " << j;
+    cout << solution.snakesAndLadders({{-1, -1, -1, -1, -1, -1}, {-1, -1, -1, -1, -1, -1}, {-1, -1, -1, -1, -1, -1}, {-1, 35, -1, -1, 13, -1}, {-1, -1, -1, -1, -1, -1}, {-1, 15, -1, -1, -1, -1}});
     return 0;
 }
