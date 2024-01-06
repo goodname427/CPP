@@ -29,5 +29,6 @@ int main()
 {
     print("ASD", 2, 3, "asdasd", 's', 213.2);
     print(2, 3, "asdasd", 's', 213.2);
+    print(2, bitset<16>(132));
     return 0;
 }
