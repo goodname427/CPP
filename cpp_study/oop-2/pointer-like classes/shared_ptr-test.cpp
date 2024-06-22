@@ -13,7 +13,7 @@ int main()
 {
     shared_ptr<Foo> sp(new Foo);
 
-    Foo f(*sp); 
+    Foo f(*sp);  
 
     sp->method();
     return 0;
