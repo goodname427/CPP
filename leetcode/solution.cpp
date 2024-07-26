@@ -31,11 +31,6 @@ int main()
     // int i, j;
     // solution.get_pos(6, 35, i, j);
     // cout << i << " " << j;
-    cout << solution.searchMatrix(
-        { { 1, 4, 7, 11, 15 },
-          { 2, 5, 8, 12, 19 },
-          { 3, 6, 9, 16, 22 },
-          { 10, 13, 14, 17, 24 },
-          { 18, 21, 23, 26, 30 } }, 5);
+    cout << solution.printKMoves(4);
     return 0;
 }
