@@ -2,98 +2,131 @@
 using namespace std;
 
 
-typedef pair<int, int> pos_t;
-
-template<>
-class std::hash<pos_t> 
+class UnionSetNode
 {
 public:
-	size_t operator()(const pos_t& p)const {
-		size_t seed = 0;
-	    seed ^= hash<int>()(p.first) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        seed ^= hash<int>()(p.second) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        return seed;
-	}
+    string key;
+    UnionSetNode* parent;
+
+    UnionSetNode(const string& key) : key(key), parent(this)
+    {}
 };
+
+class UnionSet
+{
+    vector<UnionSetNode*> tempPath;
+    unordered_map<string, UnionSetNode*> nodes;
+
+    UnionSetNode* findRoot(UnionSetNode* node)
+    {
+        UnionSetNode* root = node;
+        tempPath.clear();
+        while (root->parent != root)
+        {
+            tempPath.push_back(root);
+            root = root->parent;
+        }
+
+        for (auto pathNode : tempPath)
+        {
+            pathNode->parent = root;
+        }
+
+        return root;
+    }
+public:
+    ~UnionSet()
+    {
+        for (auto node : nodes)
+        {
+            delete node.second;
+        }
+    }
+
+    void Insert(const string& key)
+    {
+        if (nodes.find(key) == nodes.end())
+        {
+            nodes.emplace(key, new UnionSetNode(key));
+        }
+    }
+
+    string findRoot(const string& key)
+    {
+        return findRoot(nodes[key])->key;
+    }
+
+    void Union(const string& first, const string& last)
+    {
+        UnionSetNode* firstNode = nodes[first];
+        UnionSetNode* lastNode = nodes[last];
+
+        UnionSetNode* firstRoot = findRoot(firstNode);
+        UnionSetNode* lastRoot = findRoot(lastNode);
+
+        if (firstRoot == lastRoot)
+        {
+            return;
+        }
+        else
+        {
+            if (firstRoot->key.compare(lastRoot->key) < 0)
+            {
+                lastRoot->parent = firstRoot;
+            }
+            else
+            {
+                firstRoot->parent = lastRoot;
+            }
+        }
+    }
+};
+
 
 class Solution 
 {
-    char ant_char[4] = {'R', 'D', 'L', 'U'};
-    pos_t ant_dir[4] = {{1, 0}, {0, -1}, {-1, 0}, {0, 1}};
-
-    inline void turn(int& ant, int dir) const
-    {
-        ant += dir;
-
-        if (dir < 0)
-        {
-            ant += 4;
-        }
-        else if (dir > 3)
-        {
-            ant -= 4;
-        }
-    }
-
-    inline pos_t plus(const pos_t& l, const pos_t& r) const
-    {
-        return pos_t(l.first + r.first, l.second + r.second);
-    }
-
 public:
-    vector<string> printKMoves(int K) 
+    vector<string> trulyMostPopular(const vector<string>& names, const vector<string>& synonyms) 
     {
-        pos_t ant_pos;                  // 蚂蚁位置
-        int ant_i = 0;                  // 蚂蚁状态索引
-        unordered_set<pos_t> blacks;    // 所有黑色区块
-        pos_t rd_pos = {0, 0};                   // 蚂蚁走过范围的右下角坐标
-        pos_t lu_pos = {0, 0};                   // 蚂蚁走过范围的左上角坐标
-
-        // 模拟蚂蚁移动
-        while (K--)
+        UnionSet synonymSet;
+        // 合并集合
+        for (auto& synonym : synonyms)
         {
-            auto it = blacks.find(ant_pos);
-            
-            // 白色
-            if (it == blacks.end())
+            int splitIndex = synonym.find(",");
+            string firstName = synonym.substr(1, splitIndex - 1);
+            string lastName = synonym.substr(splitIndex + 1, synonym.length() - splitIndex - 2);
+
+            synonymSet.Insert(firstName);
+            synonymSet.Insert(lastName);
+            synonymSet.Union(firstName, lastName);
+        }
+
+        // 统计
+        unordered_map<string, int> statics;
+        for (auto& name : names)
+        {
+            int splitIndex = name.find("(");
+            string n = synonymSet.findRoot(name.substr(0, splitIndex));
+            int count = atoi(name.substr(splitIndex + 1, name.length() - splitIndex - 2).c_str());
+
+            auto it = statics.find(n);
+            if (it != statics.end())
             {
-                blacks.insert(ant_pos);
-                turn(ant_i, 1);
+                it->second += count;
             }
-            // 黑色
             else
             {
-                blacks.erase(it);
-                turn(ant_i, -1);
+                statics.emplace(n, count);
             }
-
-            // 向前移动
-            ant_pos = plus(ant_pos, ant_dir[ant_i]);
-
-            // 记录蚂蚁走过的最大范围
-            lu_pos = {min(ant_pos.first, lu_pos.first), max(ant_pos.second, lu_pos.second)};
-            rd_pos = {max(ant_pos.first, rd_pos.first), min(ant_pos.second, rd_pos.second)};
         }
-
-        // 生成网格
-        vector<string> grid(lu_pos.second - rd_pos.second + 1, string(rd_pos.first - lu_pos.first + 1, '_'));
-        pos_t t_pos;
-        for (int i = 0; i < grid.size(); i++)
+        
+        // 转为指定格式
+        vector<string> res;
+        for (auto name : statics)
         {
-            for (int j = 0; j < grid[i].length(); j++)
-            {
-                t_pos = {lu_pos.first + j, lu_pos.second - i};
-                if (t_pos == ant_pos)
-                {
-                    grid[i][j] = ant_char[ant_i];
-                }
-                else if (blacks.contains(t_pos))
-                {
-                    grid[i][j] = 'X';
-                }
-            }
+            res.push_back(std::format("{}({})", name.first, name.second));
         }
 
-        return grid;
+        return res;
     }
 };
