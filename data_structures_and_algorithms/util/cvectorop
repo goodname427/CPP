@@ -1,3 +1,6 @@
+#ifndef __cvectorop__
+#define __cvectorop__
+
 #include <bits/stdc++.h>
 #include "crand"
 using namespace std;
@@ -9,6 +12,14 @@ void print(vector<int> vec)
         cout << ele << " ";
     cout << endl;
 }
+
+void print(vector<int> vec, int begin, int end)
+{
+    for (int i = begin; i <= end; i++)
+        cout << vec[i] << " ";
+    cout << endl;
+}
+
 // 获得一个随机组成的向量
 vector<int> randomly_vec(int max_size, int max_value)
 {
@@ -76,3 +87,5 @@ bool is_ordered(vector<int> vec)
             return false;
     return true;
 }
+
+#endif

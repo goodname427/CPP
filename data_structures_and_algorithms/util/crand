@@ -1,3 +1,6 @@
+#ifndef __crand__
+#define __crand__
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -26,3 +29,5 @@ int random(int max)
 {
     return random(0, max);
 }
+
+#endif
